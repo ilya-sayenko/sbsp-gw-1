@@ -107,6 +107,11 @@
                             }
                         }
                     }
+                },
+                "x-gateway-route-settings": {
+                    "metadata": {
+                        "audit-event-type-name": "get-certificate-request"
+                    }
                 }
             },
             "post": {
