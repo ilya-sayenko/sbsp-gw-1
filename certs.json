@@ -1,0 +1,871 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "OpenAPI definition",
+        "version": "v0"
+    },
+    "servers": [{
+            "url": "http://localhost:8087",
+            "description": "Generated server url"
+        }
+    ],
+    "paths": {
+        "/api/certificates": {
+            "get": {
+                "tags": ["certificate-controller"],
+                "operationId": "getCertificates",
+                "parameters": [{
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 0
+                        }
+                    }, {
+                        "name": "perPage",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CertificatePaginationResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+				"x-gateway-route-settings": {
+					"metadata": {
+						"audit-event-type-name": "get-certificate"
+					}
+				}
+            },
+            "post": {
+                "tags": ["certificate-controller"],
+                "operationId": "createCertificate",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CertificateGenerationRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/certificates/requests": {
+            "get": {
+                "tags": ["certificate-request-controller"],
+                "operationId": "getRequests",
+                "parameters": [{
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 0
+                        }
+                    }, {
+                        "name": "perPage",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CertificateRequestPaginationResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["certificate-request-controller"],
+                "operationId": "createCertificateRequest",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CertificateCreateRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "integer",
+                                    "format": "int64"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/certificates/requests/recreate": {
+            "post": {
+                "tags": ["certificate-request-controller"],
+                "operationId": "updateHash",
+                "parameters": [{
+                        "name": "id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/certificates/download": {
+            "post": {
+                "tags": ["certificate-controller"],
+                "operationId": "downloadCertificateArchive",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CertificateDownloadRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/certificates/download/all": {
+            "post": {
+                "tags": ["certificate-controller"],
+                "operationId": "downloadCompleteCertificateArchive",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CertificateDownloadRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/certificates/{certificateId}": {
+            "get": {
+                "tags": ["certificate-controller"],
+                "operationId": "getCertificateById",
+                "parameters": [{
+                        "name": "certificateId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CertificateResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/certificates/requests/{requestId}": {
+            "get": {
+                "tags": ["certificate-request-controller"],
+                "operationId": "getRequestById",
+                "parameters": [{
+                        "name": "requestId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CertificateRequestResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/certificates/requests/landing/{hash}": {
+            "get": {
+                "tags": ["certificate-request-controller"],
+                "operationId": "getLandingData",
+                "parameters": [{
+                        "name": "hash",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LandingResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/certificates/events": {
+            "get": {
+                "tags": ["audit-controller"],
+                "operationId": "getEvents",
+                "parameters": [{
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 0
+                        }
+                    }, {
+                        "name": "perPage",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 10
+                        }
+                    }, {
+                        "name": "parameters",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/EventSearchParameters"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EventPaginationResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/certificates/events/{id}": {
+            "get": {
+                "tags": ["audit-controller"],
+                "operationId": "getEvent",
+                "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EventResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/certificates/event-types": {
+            "get": {
+                "tags": ["audit-controller"],
+                "operationId": "getEventTypesByService",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EventTypeResponse"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/certificates/download/open/{certificateId}": {
+            "get": {
+                "tags": ["certificate-controller"],
+                "operationId": "downloadOpenCertificate",
+                "parameters": [{
+                        "name": "certificateId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/certificates/download/all/open/{requestId}": {
+            "get": {
+                "tags": ["certificate-controller"],
+                "operationId": "downloadCompleteOpenArchive",
+                "parameters": [{
+                        "name": "requestId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CertificateGenerationRequest": {
+                "required": ["certificateInfo", "certificateRequestId", "hash", "password", "requestType"],
+                "type": "object",
+                "properties": {
+                    "certificateRequestId": {
+                        "type": "integer",
+                        "description": "Айди запроса на сертификат ",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "hash": {
+                        "type": "string",
+                        "description": "Хеш ",
+                        "example": "123456789"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "Пароль для шифрованиия хранилища сертификата",
+                        "example": "password"
+                    },
+                    "requestType": {
+                        "type": "string",
+                        "description": "Тип запроса",
+                        "enum": ["LANDING", "INSIDE", "MASSIVE"]
+                    },
+                    "certificateInfo": {
+                        "type": "array",
+                        "description": "Данные для выпуска сертификатов",
+                        "items": {
+                            "$ref": "#/components/schemas/CertificateInfo"
+                        }
+                    }
+                }
+            },
+            "CertificateInfo": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "commonName": {
+                        "type": "string",
+                        "description": "Имя сертификата",
+                        "example": "spasibo-crt"
+                    },
+                    "organizationName": {
+                        "type": "string",
+                        "description": "Имя организации для которой выпускается сертификат",
+                        "example": "spasibosb"
+                    }
+                },
+                "description": "Данные для выпуска сертификатов"
+            },
+            "CertificateCreateRequest": {
+                "required": ["certificateInfo", "email", "requestType", "transportId"],
+                "type": "object",
+                "properties": {
+                    "requestType": {
+                        "type": "string",
+                        "enum": ["LANDING", "INSIDE", "MASSIVE"]
+                    },
+                    "transportId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "inn": {
+                        "type": "string"
+                    },
+                    "organizationName": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "reason": {
+                        "type": "string"
+                    },
+                    "certificateInfo": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CertificateRequestInfo"
+                        }
+                    }
+                }
+            },
+            "CertificateRequestInfo": {
+                "type": "object",
+                "properties": {
+                    "commonName": {
+                        "type": "string",
+                        "description": "Имя сертификата",
+                        "example": "spasibo-crt"
+                    },
+                    "organizationName": {
+                        "type": "string",
+                        "description": "Имя организации для которой выпускается сертификат",
+                        "example": "spasibosb"
+                    }
+                }
+            },
+            "CertificateDownloadRequest": {
+                "required": ["hash", "id"],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Айди сертификата/запроса ",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "hash": {
+                        "type": "string",
+                        "description": "Hash запроса сертификата",
+                        "example": "123456789"
+                    }
+                }
+            },
+            "CertificatePaginationResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CertificateResponse"
+                        }
+                    },
+                    "pagination": {
+                        "$ref": "#/components/schemas/PaginationResponse"
+                    }
+                }
+            },
+            "CertificateResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "requestId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "crtId": {
+                        "type": "string"
+                    },
+                    "crtBody": {
+                        "type": "string"
+                    },
+                    "organizationName": {
+                        "type": "string"
+                    },
+                    "commonName": {
+                        "type": "string"
+                    },
+                    "failedTry": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "expireDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "downloadDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "generateDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "createDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updateDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "PaginationResponse": {
+                "type": "object",
+                "properties": {
+                    "currentPage": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "perPage": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalCount": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "CertificateRequestPaginationResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CertificateRequestResponse"
+                        }
+                    },
+                    "pagination": {
+                        "$ref": "#/components/schemas/PaginationResponse"
+                    }
+                }
+            },
+            "CertificateRequestResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "userId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["LANDING", "INSIDE", "MASSIVE"]
+                    },
+                    "totalCount": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "failedCount": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "successCount": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "transportId": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "hash": {
+                        "type": "string"
+                    },
+                    "isActiveHash": {
+                        "type": "boolean"
+                    },
+                    "inn": {
+                        "type": "string"
+                    },
+                    "organizationName": {
+                        "type": "string"
+                    },
+                    "reason": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "sendDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "generateDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "createDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updateDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "CertificateData": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "crtId": {
+                        "type": "string"
+                    },
+                    "commonName": {
+                        "type": "string"
+                    },
+                    "organizationName": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "expiresAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["CREATED", "PROCESSING", "COMPLETED", "DOWNLOADED", "ERROR"]
+                    }
+                }
+            },
+            "LandingResponse": {
+                "type": "object",
+                "properties": {
+                    "certificateRequestId": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "requestType": {
+                        "type": "string",
+                        "enum": ["LANDING", "INSIDE", "MASSIVE"]
+                    },
+                    "requestStatus": {
+                        "type": "string",
+                        "enum": ["PREPARED", "SENT"]
+                    },
+                    "certificateData": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CertificateData"
+                        }
+                    }
+                }
+            },
+            "EventSearchParameters": {
+                "type": "object",
+                "properties": {
+                    "service": {
+                        "type": "string"
+                    },
+                    "eventType": {
+                        "type": "string",
+                        "enum": ["CREATE_CERTIFICATE_REQUEST", "GENERATE_CERTIFICATE", "DOWNLOAD_CERTIFICATE", "DOWNLOAD_OPEN_CERTIFICATE", "UPDATE_CERTIFICATE_REQUEST_HASH"]
+                    },
+                    "dateFrom": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "dateTo": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "EventPaginationResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/EventResponse"
+                        }
+                    },
+                    "pagination": {
+                        "$ref": "#/components/schemas/PaginationResponse"
+                    }
+                }
+            },
+            "EventResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    "serviceName": {
+                        "type": "string"
+                    },
+                    "eventTypeName": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "type": "string"
+                    },
+                    "body": {
+                        "type": "string"
+                    },
+                    "route": {
+                        "type": "string"
+                    },
+                    "strict": {
+                        "type": "boolean"
+                    },
+                    "eventDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "createDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "EventTypeResponse": {
+                "type": "object",
+                "properties": {
+                    "serviceName": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
